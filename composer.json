@@ -1,0 +1,51 @@
+{
+    "name": "omnimap/openstreetmap",
+    "type": "library",
+    "description": "Omnimap's OpenStreetMap, under any PHP host: the live map drawn by Leaflet over a tile server of your choice (a driver for omnimap's script), a view as an image made on the server from the same tiles (the application's User-Agent, the tiles kept as their Cache-Control allows, the attribution drawn), and Nominatim's geocoding through geocoder-php (one call a second at most, answers kept).",
+    "keywords": ["map", "maps", "openstreetmap", "osm", "leaflet", "tiles", "nominatim", "geocoding", "framework-agnostic", "omnimap"],
+    "homepage": "https://github.com/glitchr-studio/omnimap-openstreetmap",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marco Meyer",
+            "email": "marco.meyer@glitchr.io"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "geocoder-php/nominatim-provider": "^5.7",
+        "omniscient/omnimap": "^1.0@dev",
+        "psr/http-client": "^1.0",
+        "psr/simple-cache": "^2.0|^3.0",
+        "symfony/http-client-contracts": "^3.0"
+    },
+    "require-dev": {
+        "nyholm/psr7": "^1.8",
+        "phpunit/phpunit": "^11.0",
+        "symfony/http-client": "^6.4|^7.0|^8.0"
+    },
+    "suggest": {
+        "ext-gd": "Images made of tiles (StaticMapInterface::image())"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omnimap\\OpenStreetMap\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Omnimap\\OpenStreetMap\\Tests\\": "Tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-1.x": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
