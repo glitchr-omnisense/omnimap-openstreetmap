@@ -66,7 +66,10 @@ no autocomplete is offered.
   tile.openstreetmap.org's tiles (the response headers: `access-control-allow-origin: *`,
   `cache-control: max-age=91080, stale-while-revalidate=604800, stale-if-error=604800`) and one
   Nominatim query, with the package's User-Agent.
-- Not verified: Leaflet's live map against another tile provider.
+- Verified on lesringostars (2026-10-23, MAP_PROVIDER=openstreetmap): the page's map made by the
+  server from these tiles and kept in omnimap's cache, the attribution shown, no request to Google
+  nor to the tile server from the visitor's browser (headless Chrome, both hosts, 1440 and 390).
+- Not verified: Leaflet's live map (assets/leaflet.js) in a browser; another tile provider.
 
 "openmap": OpenStreetMap's raster tiles with Leaflet are what this package does. Vector tiles
 (OpenMapTiles, MapLibre GL) would be another driver and another tile source, not done here.
