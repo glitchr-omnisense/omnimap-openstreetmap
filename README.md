@@ -56,6 +56,7 @@ no autocomplete is offered.
 
 ## Verified, and not
 
+- Verified (the core's harness, PHP 8.4): omnimap's conformance suite (`Tests/OpenStreetMapContractTest.php`, `Omnimap\Testing\ProviderContractTests`), offline, on recorded answers; an HTTP error or a proxy page among the tiles is a ProviderException, the other tiles dropped (before: the unread ones threw a ClientException on destruction).
 - Verified (the core's harness, PHP 8.4): the description and Leaflet's integrity hashes
   (computed from unpkg's files on 2026-10-23); a tile server of one's own; no tile fetched
   without a User-Agent; an image made through a recorded client with the User-Agent sent;
