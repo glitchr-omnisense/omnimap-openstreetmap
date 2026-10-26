@@ -24,7 +24,7 @@ final class OpenStreetMapContractTest extends TestCase
     /** @return array<string, mixed> */
     protected function contractOptions(): array
     {
-        return ['user_agent' => 'omnimap-contract/1.0 (+https://github.com/glitchr-studio/omnimap-openstreetmap)', 'nominatim_interval' => 0];
+        return ['user_agent' => 'omnimap-contract/1.0 (+https://github.com/glitchr-omnisense/omnimap-openstreetmap)', 'nominatim_interval' => 0];
     }
 
     /**

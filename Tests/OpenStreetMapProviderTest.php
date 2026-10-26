@@ -20,7 +20,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 
 final class OpenStreetMapProviderTest extends TestCase
 {
-    private const UA = 'omnimap-tests/1.0 (+https://github.com/glitchr-studio/omnimap)';
+    private const UA = 'omnimap-tests/1.0 (+https://github.com/glitchr-omnisense/omnimap)';
 
     public function testTheDescriptionLeafletDraws(): void
     {

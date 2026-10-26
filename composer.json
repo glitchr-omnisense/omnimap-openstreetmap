@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Omnimap's OpenStreetMap, under any PHP host: the live map drawn by Leaflet over a tile server of your choice (a driver for omnimap's script), a view as an image made on the server from the same tiles (the application's User-Agent, the tiles kept as their Cache-Control allows, the attribution drawn), and Nominatim's geocoding through geocoder-php (one call a second at most, answers kept).",
     "keywords": ["map", "maps", "openstreetmap", "osm", "leaflet", "tiles", "nominatim", "geocoding", "framework-agnostic", "omnimap"],
-    "homepage": "https://github.com/glitchr-studio/omnimap-openstreetmap",
+    "homepage": "https://github.com/glitchr-omnisense/omnimap-openstreetmap",
     "license": "MIT",
     "authors": [
         {
@@ -14,7 +14,7 @@
     "require": {
         "php": ">=8.2",
         "geocoder-php/nominatim-provider": "^5.7",
-        "omniscient/omnimap": "^1.0@dev",
+        "omnisense/omnimap": "^1.0@dev",
         "psr/http-client": "^1.0",
         "psr/simple-cache": "^2.0|^3.0",
         "symfony/http-client-contracts": "^3.0"

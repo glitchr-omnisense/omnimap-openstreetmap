@@ -1,6 +1,6 @@
 # omnimap/openstreetmap
 
-[omniscient/omnimap](https://github.com/glitchr-studio/omnimap)'s OpenStreetMap, under any PHP
+[omnisense/omnimap](https://github.com/glitchr-omnisense/omnimap)'s OpenStreetMap, under any PHP
 host:
 
 - **the live map** - `OpenStreetMapProvider::describe()` for `assets/leaflet.js`: Leaflet

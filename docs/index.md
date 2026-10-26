@@ -1,6 +1,6 @@
 # omnimap/openstreetmap
 
-OpenStreetMap for [omniscient/omnimap](https://github.com/glitchr-studio/omnimap): the live map
+OpenStreetMap for [omnisense/omnimap](https://github.com/glitchr-omnisense/omnimap): the live map
 drawn by [Leaflet](https://leafletjs.com) in the browser over a raster tile server of your choice
 (`assets/leaflet.js`, a driver for omnimap's `omnimap.js`), a view as an image made on the server
 from the same tiles (`Omnimap\Static\TileStitcher`: fetched with the application's User-Agent,
@@ -24,7 +24,7 @@ server.
 composer require omnimap/openstreetmap
 ```
 
-Requires PHP 8.2, `omniscient/omnimap` (1.x), `geocoder-php/nominatim-provider` (^5.7),
+Requires PHP 8.2, `omnisense/omnimap` (1.x), `geocoder-php/nominatim-provider` (^5.7),
 `psr/http-client`, `psr/simple-cache` and `symfony/http-client-contracts`; `ext-gd` for images
 made of tiles. Images need a Symfony HTTP client (`symfony/http-client`), geocoding a PSR-18
 client (Symfony's `Psr18Client` with `nyholm/psr7`, or any other). In the browser,
