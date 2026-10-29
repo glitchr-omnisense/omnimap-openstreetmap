@@ -3,6 +3,7 @@
 namespace Omnimap\OpenStreetMap\Tests;
 
 use Omnimap\Exception\InvalidConfigException;
+use Omnimap\Exception\NotSupportedException;
 use Omnimap\Model\LatLng;
 use Omnimap\Model\MapView;
 use Omnimap\Model\Marker;
@@ -60,19 +61,37 @@ final class OpenStreetMapProviderTest extends TestCase
         self::assertSame(['User-Agent' => self::UA], $http->requests[0]['options']['headers']);
     }
 
+    /** No user_agent: no image declared (the bridges' cache.make: auto makes none), and none made. */
     public function testNoUserAgentNoTileFetched(): void
     {
         $http = new RecordedHttpClient(PlainTiles::answer());
         $provider = (new OpenStreetMapFactory($http))->create();
         \assert($provider instanceof OpenStreetMapProvider);
 
+        self::assertFalse($provider->capabilities()->staticMap, 'an HTTP client and no user_agent: no image');
         try {
             $provider->image(new MapView(new LatLng(0, 0), 2), new Size(10, 10));
             self::fail('A tile fetched without a User-Agent.');
+        } catch (NotSupportedException $e) {
+            self::assertStringContainsString('user_agent', $e->getMessage());
+        }
+        try {
+            $provider->headers();
+            self::fail('A tile proxied without a User-Agent.');
         } catch (InvalidConfigException $e) {
             self::assertStringContainsString('user_agent', $e->getMessage());
         }
         self::assertSame([], $http->requests);
+        $provider = (new OpenStreetMapFactory($http))->create(['user_agent' => self::UA]);
+        self::assertTrue($provider->capabilities()->staticMap);
+    }
+
+    /** A template with {s}: the hosts the browser reaches are Leaflet's subdomains a, b and c (url() takes the same). */
+    public function testTheSubdomainsOfATemplateAreTheBrowsersHosts(): void
+    {
+        $provider = (new OpenStreetMapFactory())->create(['tiles' => 'https://{s}.tiles.example/{z}/{x}/{y}.png']);
+
+        self::assertSame(['a.tiles.example', 'b.tiles.example', 'c.tiles.example', 'unpkg.com'], $provider->capabilities()->browserHosts);
     }
 
     /** Nominatim's answer for "Osaka, Japan", recorded on 2026-10-23 (format=jsonv2, addressdetails=1). */

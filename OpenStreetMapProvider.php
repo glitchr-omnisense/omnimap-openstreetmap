@@ -31,6 +31,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 final class OpenStreetMapProvider implements MapRendererInterface, StaticMapInterface, GeocoderInterface, TileSourceInterface
 {
+    /** What {s} of a tile URL stands for: Leaflet's default subdomains. */
+    public const SUBDOMAINS = ['a', 'b', 'c'];
+
     /**
      * @param array<string, string> $leaflet
      */
@@ -61,11 +64,14 @@ final class OpenStreetMapProvider implements MapRendererInterface, StaticMapInte
 
     public function capabilities(): Capabilities
     {
-        $hosts = array_values(array_filter([parse_url($this->tiles, \PHP_URL_HOST), parse_url($this->leaflet['script'] ?? '', \PHP_URL_HOST)], 'is_string'));
+        $tiles = parse_url($this->tiles, \PHP_URL_HOST);
+        // {s}: the subdomains url() and Leaflet (its default "abc") take.
+        $tiles = \is_string($tiles) ? (str_contains($tiles, '{s}') ? array_map(static fn (string $s) => str_replace('{s}', $s, $tiles), self::SUBDOMAINS) : [$tiles]) : [];
+        $hosts = [...$tiles, ...array_filter([parse_url($this->leaflet['script'] ?? '', \PHP_URL_HOST)], 'is_string')];
 
         return new Capabilities(
             renderer: true,
-            staticMap: null !== $this->http,
+            staticMap: null !== $this->http && null !== $this->userAgent,
             geocoder: null !== $this->geocoder,
             tiles: true,
             browserHosts: array_values(array_unique($hosts)),
@@ -102,6 +108,9 @@ final class OpenStreetMapProvider implements MapRendererInterface, StaticMapInte
         if (null === $this->http) {
             throw new NotSupportedException('No HTTP client was given to the OpenStreetMap provider: no image made of tiles.');
         }
+        if (null === $this->userAgent) {
+            throw new NotSupportedException('No user_agent was given to the OpenStreetMap provider: no image made of tiles (the tile policy blocks a library\'s default User-Agent).');
+        }
 
         return (new TileStitcher($this, $this->http, $this->cache, $this->background))->image($view, $size, $scale);
     }
@@ -113,7 +122,7 @@ final class OpenStreetMapProvider implements MapRendererInterface, StaticMapInte
 
     public function url(int $zoom, int $x, int $y): string
     {
-        return str_replace(['{s}', '{z}', '{x}', '{y}'], ['abc'[($x + $y) % 3], (string) $zoom, (string) $x, (string) $y], $this->tiles);
+        return str_replace(['{s}', '{z}', '{x}', '{y}'], [self::SUBDOMAINS[($x + $y) % 3], (string) $zoom, (string) $x, (string) $y], $this->tiles);
     }
 
     public function tileSize(): int

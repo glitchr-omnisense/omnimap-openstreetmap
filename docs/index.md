@@ -49,7 +49,7 @@ no option is required.
 | `tiles` | string | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` (`OpenStreetMapFactory::OSM_TILES`) | no | the tile URL, `{z}`, `{x}`, `{y}` in it, `{s}` for a server's subdomains |
 | `attribution` | string (HTML) | `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors` (`OSM_ATTRIBUTION`) | no | shown on the live map, printed beside a kept picture, drawn on an image |
 | `max_zoom` | int | `19` | no | the deepest zoom asked |
-| `tile_size` | int | `256` | no | the tiles' size in pixels (see the 512-pixel defect below) |
+| `tile_size` | int | `256` | no | the tiles' size in pixels; 512 for a server numbering 512-pixel tiles 2^z a side at zoom `z`, read at the zoom below the view's (Leaflet's `zoomOffset: -1`) |
 | `user_agent` | string | `''` | to fetch tiles and to geocode | sent with every request the server makes |
 | `referer` | string | `''` | no | sent with them when set |
 | `nominatim` | string | `https://nominatim.openstreetmap.org` (`NOMINATIM`) | no | Nominatim's URL; empty: no geocoding |
@@ -69,29 +69,16 @@ JSON. Nothing else of a view's options is read.
 | Capability | Supported |
 |---|---|
 | renderer (`MapRendererInterface`) | yes, always |
-| static map (`StaticMapInterface`) | with the HTTP client; the call needs `user_agent` too |
+| static map (`StaticMapInterface`) | with the HTTP client and a `user_agent` |
 | geocoder (`GeocoderInterface`) | with the PSR-18 client, a `user_agent` and a `nominatim` URL |
 | tiles (`TileSourceInterface`) | yes, always (fetching one needs `user_agent`: `headers()`) |
 
 Browser hosts: the tile URL's host and the Leaflet script's (`tile.openstreetmap.org`,
-`unpkg.com` by default); cookies: declared `false`. Terms:
+`unpkg.com` by default), a host with `{s}` given as the three hosts the browser reaches
+(`{s}.tiles.example.org`: `a.tiles.example.org`, `b.tiles.example.org`, `c.tiles.example.org`,
+Leaflet's default subdomains, the ones `url()` takes); cookies: declared `false`. Terms:
 `https://operations.osmfoundation.org/policies/tiles/`,
 `https://operations.osmfoundation.org/policies/nominatim/`, `https://www.openstreetmap.org/copyright`.
-
-> [!WARNING]
-> Known defect: with the HTTP client and no `user_agent`, `capabilities()->staticMap` is `true`,
-> where it should be `false`: `image()` throws `InvalidConfigException` (from `headers()`) instead
-> of `NotSupportedException`, and omnibridge's `cache.make: auto` tries to make pictures it cannot.
-
-> [!WARNING]
-> Known defect: with a `tiles` URL holding `{s}`, `capabilities()->browserHosts` lists the
-> template's host as it is (`{s}.tiles.example.org`), where a consent banner and a
-> Content-Security-Policy need the hosts the browser reaches (`a.`, `b.`, `c.tiles.example.org`).
-
-> [!WARNING]
-> Known defect: `tile_size: 512` is drawn by Leaflet without `zoomOffset` and stitched on the
-> server on a grid of 2^(z-1) tiles at zoom z, where 512-pixel tile servers usually serve 2^z
-> tiles at z: such a server shows the wrong part of the world. Keep 256-pixel tiles.
 
 ## Behaviour
 
@@ -103,7 +90,9 @@ none) and `attribution`.
 **The live map (`assets/leaflet.js`).** Loads Leaflet's stylesheet and script from `library`
 (with `integrity` and `crossorigin="anonymous"` when an integrity is set) unless `window.L`
 exists; draws `L.map(element, {zoomControl: controls, attributionControl: true, ...map})` at the
-view's centre and zoom, one tile layer (`template`, `maxZoom`, `tileSize`, the attribution); each
+view's centre and zoom, one tile layer (`template`, `maxZoom`, `tileSize`, the attribution; for
+512-pixel tiles `zoomOffset: -1` and `minNativeZoom: 1`, so that the map's zoom 0 shows the tile of
+zoom 0 at half its size); each
 marker as a circle (radius 6, a white ring of 2, filled with its colour or `#d33b3b`, its title as
 a tooltip: no marker image to fetch); dispatches `idle` on `window` once the map is ready.
 
@@ -174,7 +163,7 @@ foreach ($osm->geocode('Osaka, Japan', 'ja', 1) as $place) {
 ```
 
 ```
-renderer,staticMap,geocoder,tiles {s}.tiles.example.org,unpkg.com
+renderer,staticMap,geocoder,tiles a.tiles.example.org,b.tiles.example.org,c.tiles.example.org,unpkg.com
 https://a.tiles.example.org/12/3592/1622.png
 image/png 600x400 from 12 tiles
 GET https://nominatim.openstreetmap.org/search?format=jsonv2&q=Osaka%2C%20Japan&addressdetails=1&extratags=1&limit=1&accept-language=ja
@@ -214,8 +203,9 @@ omnimap:
 
 - Tiles: a status other than 200 is a `ProviderException` (`OpenStreetMap answered 503 for
   https://tile.openstreetmap.org/12/3592/1621.png.`), a body that is not an image too; a transport
-  failure an `UnreachableException`; the other tiles still on their way are cancelled. No
-  `user_agent`: `InvalidConfigException`. No HTTP client: `NotSupportedException`.
+  failure an `UnreachableException`; the other tiles still on their way are cancelled. No HTTP
+  client or no `user_agent`: `image()` throws `NotSupportedException` (`staticMap` is off);
+  `headers()` without a `user_agent` an `InvalidConfigException`.
 - Geocoding: geocoder-php's errors are `ProviderException`s naming `nominatim` and the question, a
   network failure an `UnreachableException`; no PSR-18 client, no `user_agent` or no `nominatim`
   URL a `NotSupportedException`. Nothing found is an empty list.
@@ -237,7 +227,9 @@ stale-while-revalidate=604800, stale-if-error=604800`) and one Nominatim query, 
 User-Agent. On lesringostars (2026-10-23): the page's map made by the server from these tiles and
 kept in omnimap's cache, no request to the tile server from the visitor's browser.
 
-Not verified: `assets/leaflet.js` drawn in a browser; another tile provider; 512-pixel tiles.
+Not verified: `assets/leaflet.js` drawn in a browser (its tile layer is tested over a stand-in
+Leaflet, `Tests/js/leaflet.test.mjs`); another tile provider; 512-pixel tiles from a real server
+(tested on tiles drawn by the tests).
 
 ## Responsibility
 
