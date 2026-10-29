@@ -75,7 +75,10 @@ no autocomplete is offered.
 "openmap": OpenStreetMap's raster tiles with Leaflet are what this package does. Vector tiles
 (OpenMapTiles, MapLibre GL) would be another driver and another tile source, not done here.
 
-## Licence
+## Responsibility
 
-MIT. An unofficial client, affiliated with the OpenStreetMap Foundation in no way. The map data
-is © OpenStreetMap contributors, under the ODbL.
+Unofficial; not affiliated with, endorsed or sponsored by the OpenStreetMap Foundation nor by the
+tile and geocoding servers it reaches. Each server keeps its own usage policy (OpenStreetMap's tile
+and Nominatim policies: a `user_agent` that names the application, no heavy use, the attribution
+shown); whoever runs this package complies with them ([The policies](#the-policies-as-read-on-2026-10-23)).
+The map data is © OpenStreetMap contributors, under the ODbL. MIT licence.
