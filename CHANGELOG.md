@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- `policy.json`: the provider's usage policy as data (omnisense/contracts' schema), named in
+  `composer.json` (`extra.omnisense.policy`); the provider `implements DeclaresUsagePolicyInterface`
+  and gives it in `capabilities()->policy()`. Requires omnisense/contracts. See the README.
+
 ### Fixed
 
 - `capabilities()->staticMap` is off without a `user_agent`, and `image()` then throws

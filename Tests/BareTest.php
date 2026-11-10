@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 final class BareTest extends TestCase
 {
     private const FOREIGN = '~^(?:Symfony\\\\(?!Contracts\\\\HttpClient\\\\|Polyfill\\\\)|(?:Illuminate|Laravel|Doctrine|Twig|League|GuzzleHttp|Nyholm|Omnibridge|Base|App)\\\\)~';
-    private const ALLOWED_FILES = '~/vendor/(?:omnisense/omnimap|omnimap/openstreetmap|psr/[a-z-]+|php-http/[a-z-]+|symfony/http-client-contracts|willdurand/geocoder|geocoder-php/[a-z-]+|composer)/|/vendor/autoload\.php$|^/omnimap/(?:core|plugins/openstreetmap)/~';
+    private const ALLOWED_FILES = '~/vendor/(?:omnisense/(?:omnimap|contracts)|omnimap/openstreetmap|psr/[a-z-]+|php-http/[a-z-]+|symfony/http-client-contracts|willdurand/geocoder|geocoder-php/[a-z-]+|composer)/|/vendor/autoload\.php$|^/omnimap/(?:core|plugins/openstreetmap)/|^/omnisense/contracts/~';
 
     public function testEveryClassLoadsWithTheRequiredPackagesAlone(): void
     {

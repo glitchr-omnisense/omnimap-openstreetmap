@@ -1,0 +1,46 @@
+{
+    "$schema": "https://github.com/glitchr-omnisense/contracts/blob/1.x/resources/usage-policy.schema.json",
+    "provider": "openstreetmap",
+    "rateLimits": [
+        {
+            "max": 1,
+            "window": "second",
+            "scope": "application",
+            "operations": ["geocode", "reverse"],
+            "note": "Nominatim's usage policy: \"an absolute maximum of 1 request per second\", the traffic of all the application's users together. A script running longer than a day or at regular intervals (bulk geocoding) is held to 4 requests a minute, one thread, one machine: a site declares that limit itself (policy) when it geocodes in bulk. GeocoderPhp keeps one call a second per process (nominatim_interval) and caches answers (geocoder_ttl)."
+        }
+    ],
+    "concurrency": null,
+    "rights": {
+        "commercial": "allowed",
+        "openSourceRequired": null,
+        "caching": {
+            "permission": "allowed",
+            "maxTtl": null
+        },
+        "storage": "unknown",
+        "redistribution": "unknown",
+        "attribution": {
+            "required": true,
+            "text": "© OpenStreetMap contributors",
+            "url": "https://www.openstreetmap.org/copyright",
+            "where": ["map"]
+        },
+        "licence": "ODbL-1.0"
+    },
+    "requirements": {
+        "key": false,
+        "userAgent": {
+            "required": true,
+            "pattern": null
+        }
+    },
+    "provenance": {
+        "terms": "https://operations.osmfoundation.org/policies/tiles/",
+        "policy": "https://operations.osmfoundation.org/policies/nominatim/",
+        "verifiedAt": "2026-11-10",
+        "declaredBy": "maintainer",
+        "contact": null,
+        "notes": "The OpenStreetMap Foundation's servers (tile.openstreetmap.org, nominatim.openstreetmap.org): what this policy declares; another tile server or Nominatim instance has its own terms, which the site adds (policy). Tiles: a distinct, stable User-Agent naming the application (no library default, no browser imitation), a Referer from browsers, the attribution visible on the map (\"© OpenStreetMap contributors\", usually bottom right, never hidden); Cache-Control, Expires and ETag honoured, at least 7 days when they cannot be read, conditional requests for expired tiles; no bulk download, prefetching or pre-seeding, no offline use (\"download for offline\", \"save area for later\"), no wide-area scans (z>=14). The tile policy sets no request rate nor concurrency: none declared. Nominatim: a User-Agent or Referer identifying the application, results cached, no autocomplete, no systematic queries (a grid of reverse queries, every postcode), no reselling of results; the service must be switchable off without a software update. Both: best effort, access may be blocked without notice, no separate commercial terms (commercial services may lose access at any point). Storage and redistribution left unknown: the data is ODbL (share-alike), the tiles may not be kept for offline use."
+    }
+}

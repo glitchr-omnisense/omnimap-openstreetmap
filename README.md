@@ -34,6 +34,15 @@ the world on an image).
 
 ## The policies, as read on 2026-10-23
 
+Declared as data in `policy.json` (omnisense/contracts' usage policy, read again on 2026-11-10:
+`Capabilities::policy()`, `OpenStreetMapProvider::usagePolicy()`): Nominatim's 1 request a
+second for the whole application over `geocode` and `reverse` (`Registry::guarded()` refuses the
+call over it), the tile policy's absence of a published rate, the attribution, the ODbL, the
+User-Agent required, caching expected; storage and redistribution unknown. It is declared while
+the Foundation's tile server or Nominatim is the one configured; with servers of the site's
+choice the policy is unknown but for the data's licence and credit, and the site declares their
+terms (`policy`).
+
 **Tiles** (<https://operations.osmfoundation.org/policies/tiles/>): use exactly
 `https://tile.openstreetmap.org/{z}/{x}/{y}.png`; show the attribution visibly
 ("© OpenStreetMap contributors"); send a User-Agent naming the application (a library's default

@@ -91,6 +91,7 @@ final class OpenStreetMapFactory extends ProviderFactory
             http: $this->http,
             cache: $this->cache,
             geocoder: $geocoder,
+            nominatim: $c->string('nominatim'),
         );
     }
 }
