@@ -12,6 +12,12 @@ host:
 - **geocoding** - geocoder-php's `Nominatim` provider behind omnimap's `GeocoderInterface`: one
   call a second at most per process, answers kept 30 days.
 
+```sh
+composer require omnisense/omnimap omnimap/openstreetmap
+```
+
+It needs no key; a User-Agent naming the site (the `user_agent` option), and the tile and Nominatim usage policies kept.
+
 ```php
 use Omnimap\OpenStreetMap\OpenStreetMapFactory;
 use Omnimap\Registry;
